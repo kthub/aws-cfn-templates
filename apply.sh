@@ -1,5 +1,6 @@
 #!/bin/sh
 PROFILE=default
+REGION=ap-northeast-1
 
 # check arguments
 if [ $# -lt 1 ]; then
@@ -20,7 +21,7 @@ fi
 echo applying ${TEMPLATE} ...
 
 # check if the stack is already created or not
-chk=$(aws --profile ${PROFILE} cloudformation list-stacks \
+chk=$(aws --profile ${PROFILE} --region ${REGION} cloudformation list-stacks \
       --stack-status-filter \
         "CREATE_COMPLETE" \
         "UPDATE_COMPLETE" \
@@ -29,8 +30,8 @@ chk=$(aws --profile ${PROFILE} cloudformation list-stacks \
       | jq -r '.StackSummaries[].StackName' | grep ${STACK} | wc -l)
 
 # create/update stack
-alias create-stack="aws --profile ${PROFILE} cloudformation create-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
-alias update-stack="aws --profile ${PROFILE} cloudformation update-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
+alias create-stack="aws --profile ${PROFILE} --region ${REGION} cloudformation create-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
+alias update-stack="aws --profile ${PROFILE} --region ${REGION} cloudformation update-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
 if [ 1 -ne ${chk} ]; then
   # create
   echo create-stack ...
