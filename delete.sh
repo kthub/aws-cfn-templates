@@ -1,16 +1,22 @@
-#!/bin/sh
-PROFILE=default
-REGION=ap-northeast-1
+#!/bin/bash
+set -e
 
-# check arguments
+##
+## Constants
+##
+readonly PROFILE=default
+readonly REGION=ap-northeast-1
+
 if [ $# -lt 1 ]; then
   echo ERROR: The script requires at least one argument.
   exit 1
 fi
 
-STACK=$1-stack
+readonly STACK=$1-stack
 
-# delete template
+##
+## Delete template
+##
 echo deleting ${STACK} ...
 
 # check if the stack exists or not
@@ -27,14 +33,8 @@ if [ 1 -ne ${chk} ]; then
   echo ERROR: ${STACK} does not exist.
 else
   # delete
-  echo delete-stack ...
+  echo request delete-stack ...
   aws --profile ${PROFILE} --region ${REGION} cloudformation delete-stack --stack-name ${STACK}
 fi
 
-# check exit code
-if [ $? -eq 0 ]; then
-  echo success
-  exit 0
-else
-  exit 1
-fi
+echo The request was successfully sent.

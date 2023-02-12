@@ -21,6 +21,7 @@ Parameters:
 Resources:
   # KeyPair for SSH access
   # private key will be stored in a parameter store with the name: /ec2/keypair/{key_pair_id}.
+  # when updating the stack, KeyName must be changed.
   KeyPair:
     Type: AWS::EC2::KeyPair
     Properties: 

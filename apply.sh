@@ -1,23 +1,29 @@
-#!/bin/sh
-PROFILE=default
-REGION=ap-northeast-1
+#!/bin/bash
+set -e
 
-# check arguments
+##
+## Constants
+##
+readonly PROFILE=default
+readonly REGION=ap-northeast-1
+
 if [ $# -lt 1 ]; then
   echo ERROR: The script requires at least one argument.
   exit 1
 fi
 
-TEMPLATE=$1-template.yaml
-PARAMS=$1-parameters.json
-STACK=$1-stack
+readonly TEMPLATE=$1-template.yaml
+readonly PARAMS=$1-parameters.json
+readonly STACK=$1-stack
 
 if [ ! -e templates/${TEMPLATE} ]; then
   echo ERROR: The specified template ${TEMPLATE} does not exist.
   exit 1
 fi
 
-# apply template
+##
+## Apply template
+##
 echo applying ${TEMPLATE} ...
 
 # check if the stack is already created or not
@@ -30,11 +36,16 @@ chk=$(aws --profile ${PROFILE} --region ${REGION} cloudformation list-stacks \
       | jq -r '.StackSummaries[].StackName' | grep ${STACK} | wc -l)
 
 # create/update stack
-alias create-stack="aws --profile ${PROFILE} --region ${REGION} cloudformation create-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
-alias update-stack="aws --profile ${PROFILE} --region ${REGION} cloudformation update-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM"
+create-stack() {
+  aws --profile ${PROFILE} --region ${REGION} cloudformation create-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM $@
+}
+update-stack() {
+  aws --profile ${PROFILE} --region ${REGION} cloudformation update-stack --stack-name ${STACK} --template-body file://templates/${TEMPLATE} --capabilities CAPABILITY_IAM $@
+}
+
 if [ 1 -ne ${chk} ]; then
   # create
-  echo create-stack ...
+  echo request create-stack ...
   if [ -e parameters/${PARAMS} ]; then
     MINIFIED_PARAMS=$(jq -c < parameters/${PARAMS})
     create-stack --parameters "${MINIFIED_PARAMS}"
@@ -43,7 +54,7 @@ if [ 1 -ne ${chk} ]; then
   fi
 else
   # update
-  echo update-stack ...
+  echo request update-stack ...
   if [ -e parameters/${PARAMS} ]; then
     MINIFIED_PARAMS=$(jq -c < parameters/${PARAMS})
     update-stack --parameters "${MINIFIED_PARAMS}"
@@ -52,10 +63,4 @@ else
   fi
 fi
 
-# check exit code
-if [ $? -eq 0 ]; then
-  echo success
-  exit 0
-else
-  exit 1
-fi
+echo The request was successfully sent.
