@@ -1,0 +1,3 @@
+{
+    "cfnLint.path": "/Users/keiichi/home/gitrepo/aws-cfn-templates/.venv/bin/cfn-lint"
+}
