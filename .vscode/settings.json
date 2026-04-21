@@ -1,3 +1,10 @@
 {
-    "cfnLint.path": "/Users/keiichi/home/gitrepo/aws-cfn-templates/.venv/bin/cfn-lint"
+    "cfnLint.path": "/Users/keiichi/home/gitrepo/aws-cfn-templates/.venv/bin/cfn-lint",
+    "yaml.customTags": [
+      "!And", "!If", "!Not", "!Equals", "!Or",
+      "!FindInMap sequence", "!Base64", "!Cidr",
+      "!Ref", "!Sub", "!GetAtt", "!GetAZs",
+      "!ImportValue", "!Select", "!Select sequence",
+      "!Split", "!Join sequence"
+    ]
 }
