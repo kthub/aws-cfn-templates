@@ -1,5 +1,4 @@
 {
-    "cfnLint.path": "/opt/homebrew/bin/cfn-lint",
     "yaml.customTags": [
       "!And", "!If", "!Not", "!Equals", "!Or",
       "!FindInMap sequence", "!Base64", "!Cidr",
