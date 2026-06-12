@@ -1,5 +1,5 @@
 {
-    "cfnLint.path": "/Users/keiichi/home/gitrepo/aws-cfn-templates/.venv/bin/cfn-lint",
+    "cfnLint.path": "/opt/homebrew/bin/cfn-lint",
     "yaml.customTags": [
       "!And", "!If", "!Not", "!Equals", "!Or",
       "!FindInMap sequence", "!Base64", "!Cidr",
